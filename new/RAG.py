@@ -49,8 +49,3 @@ prompt = "Today someone with obesity wants to eat some food. Do you have any rec
 response = generate_response(prompt, symptom_data)
 print(response["food"])  
 print(response["explanation"])
-
-prompt = "Do you have any recommended food?"
-response = generate_response(prompt, symptom_data)
-print(response["food"])  
-print(response["explanation"])
