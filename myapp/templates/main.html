@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<h1>List movies in database</h1>
+{% for movie in movies %}
+<p>{{movie.movie_name}} (id={{movie.id}})</p>
+{% endfor %}
+<h1>All Users</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.user_name }} (Age: {{ user.user_age }})</li>
+        {% endfor %}
+    </ul>
+</html>

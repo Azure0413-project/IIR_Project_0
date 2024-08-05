@@ -1,21 +1,29 @@
+from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import myapp
 
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_age = models.IntegerField()
+    user_name = models.CharField(max_length=50)
 
 class CustomUser(AbstractUser):
-    # with username and password
-    pass
+    user_age = models.IntegerField(null=True, blank=True)
+    is_admin = models.BooleanField(default=False)
 
-class ChatRecord(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='chat_records')
-    prompt = models.TextField()
-    response_text = models.TextField()
-    response_image = models.ImageField(upload_to='responses/', null=True, blank=True)
-    response_agree = models.BooleanField()
-    feedback = models.TextField(null=True, blank=True)
-    
-    def __str__(self):
-        return f'{self.user.username} - {self.prompt[:50]}'
+    def save(self, *args, **kwargs):
+        if self.username == 'admin':
+            self.is_admin = True
+        super().save(*args, **kwargs)
+
+class Movie(models.Model):
+    id = models.AutoField(primary_key=True)
+    movie_name = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='movies/', blank=True, null=True)
+
+class Rating(models.Model):
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    rating = models.IntegerField()
