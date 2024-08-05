@@ -9,9 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 import os
 
 # change the url you want to get
+# if catch item occur error, please change the pauseTimem and srollHeight below. roll_web(Line:48). smaller is recommanded. 
 url = "https://www.foodpanda.com.tw/restaurant/a9is/jia-andb-coffee-takeaway-bar-tai-nan-guang-ming-dian"
+# you need to change id every round
+id = 0
 
-# if catch item occur error, please change the pauseTimem and srollHeight below. roll_web(Line:45). smaller is recommanded. 
+
 
 def roll_web(driver, pauseTime = 1, srollHeight = 300, final_stop = 2):
     SCROLL_PAUSE_TIME = pauseTime
@@ -30,7 +33,7 @@ def roll_web(driver, pauseTime = 1, srollHeight = 300, final_stop = 2):
     time.sleep(final_stop)
 
 
-def crawler(url):
+def crawler(url, id):
     # web address (TaiwanGoodInfo)
     
     # pretent it from the normal user
@@ -67,7 +70,7 @@ def crawler(url):
     # get the product
     product_grid = soup.find_all("li", class_="box-flex product-tile fd-row p-relative pa-st")
 
-    id = 0
+
     for grid in product_grid:
 
         name = grid.find("span", class_="vertical-align-middle")
@@ -90,6 +93,8 @@ def crawler(url):
             # 寫入一列資料
             writer.writerow([str(id), vendor.text, name.text, price, pic_url])
         id += 1
+    
+    print(f"Id for next Round is: {id}")
 
 
-crawler(url)
+crawler(url, id)
