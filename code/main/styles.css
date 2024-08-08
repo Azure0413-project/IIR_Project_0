@@ -104,8 +104,8 @@ button:hover {
     padding: 15px;
     display: inline-block;
     vertical-align: middle;
-    width: 25vw; /* 50% of the viewport width */
-    height: 55vh; /* 50% of the viewport height */
+    width: 15vw; 
+    height: 35vh; 
 }
 
 .recipe-card img {

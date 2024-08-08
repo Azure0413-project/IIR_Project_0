@@ -2,7 +2,25 @@
 
 document.getElementById('findRecipes').addEventListener('click', function() {
 
+    // Read CSV
+    const shop_csv = [  "2000,九州豚骨拉麵 (台南南門店),豚骨拉麵, 120,https://images.deliveryhero.io/image/fd-tw/Products/2047873.jpg?width=150&height=150",
+                         "2001,九州豚骨拉麵 (台南南門店),地獄拉麵, 130,https://images.deliveryhero.io/image/fd-tw/Products/2047878.jpg?width=150&height=150",
+                         "2002,九州豚骨拉麵 (台南南門店),味噌拉麵, 130,https://images.deliveryhero.io/image/fd-tw/Products/2047877.jpg?width=150&height=150"
+                    ]; 
+                
+    // Convert shop_list to an array of objects
+    const shop_dict = shop_csv.map(item => {
+        const [id, vendor, product_name, product_price, product_img] = item.split(',');
+        return {
+            id: id.trim(),
+            vendor: vendor.trim(),
+            product_name: product_name.trim(),
+            product_price: product_price.trim(),
+            product_img: product_img.trim()
+        };
+    });
 
+    console.log(shop_dict); 
 
     // prompt
     const prompt = document.getElementById('foodPrompt').value;    
@@ -15,7 +33,7 @@ document.getElementById('findRecipes').addEventListener('click', function() {
     }
 
     // Clear the input field
-    document.getElementById('foodPrompt').value = '';
+    // document.getElementById('foodPrompt').value = '';
 
 
     // review part
@@ -34,36 +52,39 @@ document.getElementById('findRecipes').addEventListener('click', function() {
 
 
    // Sample recipe data with tags
-   const recipes = [
+   const foodInfo = [
     {
-        title: "Beef Burger",
-        image: "https://cdn2.tmbi.com/TOH/Images/Photos/37/1200x1200/exps41063_SD163614D12_01_3b.jpg",
-        description: "Consists of a seasoned ground beef patty cooked to your desired level of doneness, usually served in a toasted bun. ",
-        tags: ["beef", "chicken"]
+        vendor: shop_dict[0]['vendor'],
+        product_name: shop_dict[0]['product_name'],
+        product_price: shop_dict[0]['product_price'],
+        product_img: shop_dict[0]['product_img'],
+        tags: ["ramen"]
     },
     {
-        title: "Beef Noodle Soup",
-        image: "https://th.bing.com/th/id/OIP.0oNApt7arC9WlQN6vLotJQHaHa?rs=1&pid=ImgDetMain",
-        description: "A refreshing noodle soup with beef.",
-        tags: ["beef", "noodle"]
+        vendor: shop_dict[1]['vendor'],
+        product_name: shop_dict[1]['product_name'],
+        product_price: shop_dict[1]['product_price'],
+        product_img: shop_dict[1]['product_img'],
+        tags: ["ramen"]
     },
     {
-        title: "Beef Steak",
-        image: "https://th.bing.com/th/id/OIP.5g8-3tuYrdHuJn2-iYVzGwAAAA?rs=1&pid=ImgDetMain",
-        description: "A beef steak is a flavorful and tender cut of beef, typically grilled or pan-seared to perfection.",
-        tags: ["beef", "stir-fry"]
+        vendor: shop_dict[2]['vendor'],
+        product_name: shop_dict[2]['product_name'],
+        product_price: shop_dict[2]['product_price'],
+        product_img: shop_dict[2]['product_img'],
+        tags: ["ramen"]
     },
 ];
 
     // Filter recipes based on the prompt
-    const filteredRecipes = recipes.filter(recipe => 
+    const filteredFood = foodInfo.filter(recipe => 
         recipe.tags.some(tag => prompt.includes(tag))
     );
-    console.log(filteredRecipes)
+    console.log(filteredFood)
 
     // If no recipes match, show a default message
-    if (filteredRecipes.length === 0) {
-        filteredRecipes.push({
+    if (filteredFood.length === 0) {
+        filteredFood.push({
             title: "No Recommendations",
             image: "https://via.placeholder.com/150",
             description: "Sorry, we couldn't find any recommendations for your prompt."
@@ -75,18 +96,19 @@ document.getElementById('findRecipes').addEventListener('click', function() {
     recommendationList.innerHTML = '';
 
     // Display recipes
-    filteredRecipes.forEach(recipe => {
+    filteredFood.forEach(recipe => {
         const listItem = document.createElement('li');
         listItem.className = 'recipe-card';
         listItem.innerHTML = `
-            <img src="${recipe.image}" alt="${recipe.title}">
-            <h3>${recipe.title}</h3>
-            <p>${recipe.description}</p>
+            <img src="${recipe.product_img}" alt="${recipe.vendor}">
+            <h3>${recipe.product_name}</h3>
+            <p>${recipe.vendor}</p>
+            <p>Price: ${recipe.product_price} NTD</p>
         `;
         recommendationList.appendChild(listItem);
     });
 
     // Show results section
-    document.getElementById('recommendations').classList.remove('hidden');
+    document.getElementById('recommendation').classList.remove('hidden');
 });
 
