@@ -1,10 +1,13 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import CSVLoader
+from langchain_community.document_loaders.pdf import PyMuPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import os
+import openai
+openai.api_key = f'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'
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -17,13 +20,12 @@ def db_update(db_destination, document_dir, device_choice, chunk_size, chunk_ove
     # path to the pre-trained model
     modelPath = "sentence-transformers/all-MiniLM-l6-v2"
     model_kwargs = {'device': device_choice}
-    encode_kwargs = {'normalize_embeddings': False}
+
 
     # Initialize an instance of HuggingFaceEmbeddings
     embeddings = HuggingFaceEmbeddings(
         model_name=modelPath,     
         model_kwargs=model_kwargs, 
-        encode_kwargs=encode_kwargs 
     )
 
     if os.path.exists(db_destination) == True:
@@ -32,9 +34,9 @@ def db_update(db_destination, document_dir, device_choice, chunk_size, chunk_ove
         for i in range(len(document)):
             
             # according to different file, use different method
-            if document[i].split()[1] == 'csv':
-                loader = CSVLoader(os.path.join(document_dir,document[i]), source_column="Disease")
-            elif document[i].split()[1] == 'pdf':
+            if document[i].split('.')[1] == 'csv':
+                loader = CSVLoader(os.path.join(document_dir,document[i]))
+            elif document[i].split('.')[1] == 'pdf':
                 loader = PyMuPDFLoader(os.path.join(document_dir,document[i]))
             
             # load the data
@@ -46,10 +48,10 @@ def db_update(db_destination, document_dir, device_choice, chunk_size, chunk_ove
 
             # create the db
             if i != 0:
-                db = db.merge_from(FAISS.from_documents(docs, embeddings))
+                db.merge_from(FAISS.from_documents(docs, embeddings))
             else:
                 db = FAISS.from_documents(docs, embeddings)
-            
+        
         # save the db
         db.save_local(os.path.split(db_destination)[1])
     
@@ -78,12 +80,13 @@ def RAG(query:str, db_destination=None, document_dir=None,chunk_size=1000, chunk
     # prompt
     from langchain.prompts import PromptTemplate
     location_extractor_prompt = PromptTemplate(
-        input_variables=['dish', 'ingredient'],
+        input_variables=['dish', 'query'],
         template=
         """
-        I recommand {dish}, and the preparing is following:{ingredient}
+        The system recommand {dish}.
         """
     )
+    
 
     # retrive form the db
     col = retriever.get_relevant_documents(query)[0].page_content.split('\n')
@@ -91,13 +94,33 @@ def RAG(query:str, db_destination=None, document_dir=None,chunk_size=1000, chunk
     dish = col[1].split(':')[1]
 
     # combine with the prompt
-    prompt_text = location_extractor_prompt.format(dish=dish, ingredient=ingredient)
+    prompt_text = location_extractor_prompt.format(dish=dish, query=query)
 
     # put the prompt into llm
     llmresult = text2text(prompt_text)
+    # print(llmresult)
 
-    return {'dish': dish, 'response': prompt_text}
+    openAIprompt = PromptTemplate(
+        input_variables=['dish', 'query'],
+        template=
+        """
+        patient ask:{query}, and the system find the user should eat{dish}, please answer like a doctor.
+        """
+    )
+    prompt = openAIprompt.format(dish=dish, query=query)
+    print(prompt)
+    
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo",
+    #     messages=[
+    #             {"role": "system", "content": "系統訊息，目前無用"},
+    #             {"role": "assistant", "content": "此處填入機器人訊息"},
+    #             {"role": "user", "content": "hello"}
+    #         ]
+    # )
+    # print(completion.choices[0].message.content)
+    return llmresult
     
     
 
-RAG('please suggest for me a dish', '/home/project/faiss_index', '/home/project/document')
+RAG('i have diabetes,  please recommand one diet for me', '/home/project/faiss_index', '/home/project/document')
