@@ -98,7 +98,7 @@ def RAG(query:str, db_destination=None, document_dir=None,chunk_size=1000, chunk
     llmresult = text2text(prompt_text)
     # print(llmresult)
     
-    return llmresult
+    return llmresult['generated_text']
     
     
 
