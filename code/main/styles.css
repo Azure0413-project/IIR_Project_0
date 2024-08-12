@@ -1,0 +1,137 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.content {
+    position: relative;
+    z-index: 1; /* Ensure content is above the overlay */
+}
+
+/* to create the overlay. Set its position to absolute, cover the entire parent element, and apply a semi-transparent background color */
+body::before {
+    content: ""; /* This is necessary to create the pseudo-element */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Adjust the color and transparency as needed */
+    z-index: -1; /* Ensure the overlay is below the content */
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+     
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('../images/background_01.jpeg')  no-repeat center center fixed;
+    background-size: cover;
+}
+
+header {
+    background-color: #333333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+h2 {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2em;
+    color: #ffffff;
+    margin: 20px 0;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    flex: 1;  /* percentage, this will push the footer down */
+    padding: 20px;
+    text-align: center;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
+}
+
+.hero {
+    margin-bottom: 20px;
+}
+
+#prompt-part {
+    display: flex;
+    flex-direction: row; /* default */
+    
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.hidden {
+    display: none;
+}
+
+.recipe-card {
+    
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 15vw; 
+    height: 35vh; 
+}
+
+.recipe-card img {
+    width: 100%;
+    height: 70%;
+    border-radius: 10px;
+}
+
+.recipe-card h3 {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+.recipe-card p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+#review{
+    margin:20px;
+}
+
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
