@@ -7,7 +7,6 @@ from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import os
 import openai
-openai.api_key = f'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'
 
 import warnings
 warnings.filterwarnings('ignore')
