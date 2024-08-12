@@ -6,7 +6,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import os
-import openai
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -98,26 +97,7 @@ def RAG(query:str, db_destination=None, document_dir=None,chunk_size=1000, chunk
     # put the prompt into llm
     llmresult = text2text(prompt_text)
     # print(llmresult)
-
-    openAIprompt = PromptTemplate(
-        input_variables=['dish', 'query'],
-        template=
-        """
-        patient ask:{query}, and the system find the user should eat{dish}, please answer like a doctor.
-        """
-    )
-    prompt = openAIprompt.format(dish=dish, query=query)
-    print(prompt)
     
-    # completion = openai.ChatCompletion.create(
-    #     model="gpt-3.5-turbo",
-    #     messages=[
-    #             {"role": "system", "content": "系統訊息，目前無用"},
-    #             {"role": "assistant", "content": "此處填入機器人訊息"},
-    #             {"role": "user", "content": "hello"}
-    #         ]
-    # )
-    # print(completion.choices[0].message.content)
     return llmresult
     
     
