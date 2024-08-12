@@ -7,8 +7,8 @@ from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import os
 
-import warnings
-warnings.filterwarnings('ignore')
+# import warnings
+# warnings.filterwarnings('ignore')
 
 def db_update(db_destination, document_dir, device_choice, chunk_size, chunk_overlap):
 
