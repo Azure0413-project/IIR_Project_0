@@ -1,0 +1,25 @@
+# chat_record = ChatRecord.objects.create(
+            #     new_prompt=new_prompt,
+            #     restaurant_name=restaurant_name,
+            #     food_name=food_name,
+            #     food_price=food_price,
+            #     response_text=response_text,
+            #     google_map=google_map,
+            #     response_image_1=None,
+            #     response_image_2=None,
+            #     response_image_3=None,
+            #     response_image_url_1=response_image_url_1,
+            #     response_image_url_2=response_image_url_2,
+            #     response_image_url_3=response_image_url_3,
+            # )
+
+範例：
+            new_prompt = "What are you in the mood for today?"
+            restaurant_name = ['Restaurant A', 'Restaurant B', 'Restaurant C']
+            food_name = ['Food A', 'Food B', 'Food C']
+            food_price = [10.0, 15.0, 20.0]
+            response_text = ['Response 1', 'Response 2', 'Response 3']
+            response_image_url_1 = 'https://example.com/image1.jpg'
+            response_image_url_2 = 'https://example.com/image2.jpg'
+            response_image_url_3 = 'https://example.com/image3.jpg'
+            google_map = ["https://127.0.0.1","https://127.0.0.1","https://127.0.0.1"]
