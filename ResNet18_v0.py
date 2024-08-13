@@ -45,8 +45,9 @@ def encode_image(img_path):
 
 # 編碼圖片
 select_num = 3
-sample_amount = 4913
+sample_amount = 100
 z_vec = []
+z_vec_label = []
 data_path = '/app/sum_project/data/data/'
 gen_path = '/app/sum_project/food_gen_dataset/meat'
 # 1942, 2512-2999, 3171, 3202-3999, file noneexist
@@ -56,17 +57,18 @@ for pic_num in range(sample_amount):
         latent_vector = encode_image(img_path)
 
         z_vec.append(latent_vector)
-
+        z_vec_label.append(pic_num)
         print(img_path)
         print("Latent vector shape:", latent_vector.shape,  type(latent_vector))
+print(z_vec_label)
 
 data_set_amount = len(z_vec)
+print(data_set_amount)
 
 # gen_pic to be compare, rand a label
 img_path_valid = []
 latent_vector_valid = []
 rand_num = random.sample(range(1, 4), select_num)
-
 for i in range (select_num):
     img_path_valid.append(os.path.join(gen_path, f'LINE_ALBUM_food_test_gen_240806_{rand_num[i]}.jpg'))
     latent_vector_valid.append(encode_image(img_path_valid[i]))
@@ -76,9 +78,10 @@ def image_to_vector(image):
     # pic to 1 dimension
     return image.flatten().reshape(1, -1)
 
-def find_k_largest_with_indices(data_list, amount_largest):
+def find_k_largest_with_indices(data_label_list, data_list, amount_largest):
+    new_list = list(zip(data_label_list, data_list))
     # list with value adn index
-    data_list_with_indices = [(val, i) for i, val in enumerate(data_list)]
+    data_list_with_indices = [(val, i) for i, val in new_list]
     # heapq.nlargest find top k largest value
     largest_with_indices = heapq.nlargest(amount_largest, data_list_with_indices)
     labels = [i for val, i in largest_with_indices]
@@ -88,56 +91,93 @@ def find_k_largest_with_indices(data_list, amount_largest):
 df = pd.read_csv("/app/sum_project/data/data/restaurant.csv")
 df
 
-df['used'] = 0
-type(df['used'][0])
-df
+def show_fig(gen_path, data_path, f_df_label) :
+    pic_gen = Image.open(gen_path)
+    pic_data = Image.open(data_path)
+    # subplot for gen_pic and data_pic
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    axs[0].imshow(pic_gen)
+    axs[0].axis('off')
+    axs[0].set_title('gen')
+    axs[1].imshow(pic_data)
+    axs[1].axis('off')
+    axs[1].set_title('data' + f_df_label)
+    plt.show()
 
+df['used'] = 0
 amount_largest = 3
-# 找一個test
+json_id = []
+json_rest_name = []
+json_food_name = []
+json_food_price = []
+json_food_img = []
+json_rest_map = []
+
+# calculate gen pic[i] with database picture
 for i in range(select_num):
   vector1 = image_to_vector(latent_vector_valid[i]) #gen picture
   sim_store = []
-  
   for eva_num in range(data_set_amount):
-      
-      # 将图片转换为向量
-      vector2 = image_to_vector(z_vec[eva_num]) #dataset compare
+    # picture to vector
+    vector2 = image_to_vector(z_vec[eva_num]) #dataset compare
 
-      # 计算余弦相似度
-      cos_sim = cosine_similarity(vector1, vector2)
-
-      # cos_sim[0][0] : similarity values
-      # print('pic_label = ' + data_path + f'/{eva_num}.jpeg')
-      # print(f"Cosine Similarity: {cos_sim[0][0]}")
-      sim_store.append(float(cos_sim[0][0]))
+    # evaluate cosine similarity
+    cos_sim = cosine_similarity(vector1, vector2)
+    sim_store.append(float(cos_sim[0][0]))
 
   # top[0] : picture label , top[1] : similarity values
-  top = find_k_largest_with_indices(sim_store, amount_largest)
-  filtered_df = df[df['id'] == top[0][0]]
+  top_k = find_k_largest_with_indices(z_vec_label, sim_store, amount_largest)
+  max_0 = top_k[0][0]
+  f_df = df[df['id'] == max_0]
+  f_df_idx = f_df.index[0]
 
-  if(filtered_df['used'][filtered_df.index[0]] == 1):
-    filtered_df = df[df['id'] == top[0][1]]
-  if(filtered_df['used'][filtered_df.index[0]] == 1):
-    filtered_df = df[df['id'] == top[0][1]]
-  filtered_df
+  if(df['used'][f_df_idx] == 1):
+    f_df = df[df['id'] == top_k[0][1]]
+    f_df_idx = f_df.index[0]
+  if(df['used'][f_df_idx] == 1):
+    f_df = df[df['id'] == top_k[0][2]]
+    f_df_idx = f_df.index[0]
 
-  json_str = filtered_df.to_json(orient='split')
-  print(json_str)
-  df.loc[filtered_df.index[0], 'used'] = 1
-  # plotfig(label, values)
-
-  # compare_picture
-  fin_gen_path = os.path.join(gen_path, f'LINE_ALBUM_food_test_gen_240806_{rand_num[i]}.jpg')
-  fin_data_path = os.path.join(data_path, f'{top[0][0]}.jpeg')
-  pic_gen = Image.open(fin_gen_path)
-  pic_data = Image.open(fin_data_path)
-  # subploi for gen_pic and data_pic
-  fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-  axs[0].imshow(pic_gen)
-  axs[0].axis('off')
-  axs[0].set_title('gen')
-  axs[1].imshow(pic_data)
-  axs[1].axis('off')
-  axs[1].set_title('data' + f'{top[0][0]}.jpeg')
-  plt.show()
+  df.loc[f_df_idx, 'used'] = 1
   
+  f_df_label = f_df['id'][f_df_idx]
+
+  # convert python file into JSON file and return value 
+  json_str = f_df.to_json(orient='split')
+  print(json_str)
+  json_dict = json.loads(json_str)
+  json_value = json_dict['data'][0]
+
+  print(f"The vendor is: {json_value}")
+  print(f'id = {json_value[0]}')
+  print(f'rest_name = {json_value[1]}')
+  print(f'food_name = {json_value[2]}')
+  print(f'food_price = {json_value[3]}')
+  print(f'foog_img = {json_value[4]}')
+  print(f'rest_map =  {json_value[5]}')
+
+  # json_data.id.append(json_value[0])
+  # json_data.rest_name.append(json_value[1])
+  # json_data.food_name.append(json_value[2])
+  # json_data.food_price.append(json_value[3])
+  # json_data.food_img.append(json_value[4])
+  # json_data.rest_map.append(json_value[5])
+
+  json_id.append(json_value[0])
+  json_rest_name.append(json_value[1])
+  json_food_name.append(json_value[2])
+  json_food_price.append(json_value[3])
+  json_food_img.append(json_value[4])
+  json_rest_map.append(json_value[5])
+
+  # def : plotfig(label, values)
+  fin_gen_path = os.path.join(gen_path, f'LINE_ALBUM_food_test_gen_240806_{rand_num[i]}.jpg')
+  fin_data_path = os.path.join(data_path, f'{f_df_label}.jpeg')
+  show_fig(fin_gen_path, fin_data_path, f'{f_df_label}')
+
+print(json_id)
+print(json_rest_name)
+print(json_food_name)
+print(json_food_price)
+print(json_food_img)
+print(json_rest_map)
