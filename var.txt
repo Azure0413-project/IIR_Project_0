@@ -23,3 +23,5 @@
             response_image_url_2 = 'https://example.com/image2.jpg'
             response_image_url_3 = 'https://example.com/image3.jpg'
             google_map = ["https://127.0.0.1","https://127.0.0.1","https://127.0.0.1"]
+
+new_prompt, restaurant_name, food_name, food_price, response_image_url_1, response_image_url_2, response_image_url_3, google_map = RDS(prompt)
