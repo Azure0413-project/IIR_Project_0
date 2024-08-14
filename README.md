@@ -5,4 +5,4 @@ The project in the summer vacation. It will generate the food and the correspond
 ![image](https://github.com/Azure0413-project/IIR_Project_0/blob/main/flow.png)
 
 ## Note
-### If you want to run the code. It should have settings.py, data directory, diffuser directory!
+### If you want to run the code. It should have settings.py, data directory, diffuser directory.
