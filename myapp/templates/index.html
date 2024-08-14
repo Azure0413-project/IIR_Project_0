@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIR Food Recommendation System</title>
+    <link rel="stylesheet" href="../static/myapp/css/styles_yl.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <h1>IIR Food Recommendation System</h1>
+    </header>
+    
+    <main>
+        <div class="content"> 
+            <section class="hero">
+
+                <div id="query">
+                    <h2>What you want to eat today?</h2>
+                    <div id="prompt-part">
+                        <input type="text" id="foodPrompt" name="query" style="border-radius: 10px;" placeholder="Describe what you’re in the mood for..." >
+                        <button id="findRecipes">Enter</button>
+                    </div>
+                    
+                </div>
+                <h3 id="waiting-message" class="hidden" style="color: white; font-weight: bolder;"></h3>
+
+            
+
+                <div id="recommendation" class="hidden">
+
+                    <h3 id="rag-response" style="color: white;"></h3>
+                    <ul id="recommendationList"></ul>
+                    
+                    <div id="review">
+                        <p style="color: white;">Are you satisfied with our system this time?</p>
+                        <button id="goodButton"><i class="fa-solid fa-thumbs-up"></i></button>
+                        <button id="badButton"><i class="fa-solid fa-thumbs-down"></i></button>
+                    </div>
+                </div>
+
+                <!-- Feedback form -->
+                <div id="feedbackForm" class="hidden" style="width: 100%;">
+                    <h3 style="color: white;">We value your feedback. Please let us know how we can improve:</h3>
+                    <div class="feedback-container">
+                        <input id="feedbackText" placeholder="Enter your feedback here..." style="width: 60%;padding: 10px 20px; border-radius: 5px;"></input>
+                        <button id="submitFeedback">Submit Feedback</button>
+                    </div>
+                </div>
+
+
+            </section>
+        
+        </div>
+        <div id="promptContainer"></div>
+    </main>
+    
+
+    <footer>
+        <p>&copy; 2024 IIR Food Recommendation. All rights reserved.</p>
+    </footer>
+    <script>
+        const user_id = "{{ user_id|escapejs }}";
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="../static/myapp/js/script.js"></script> <!-- Ensure to replace "script.js" with your actual JavaScript file path if different -->
+</body>
+</html>
