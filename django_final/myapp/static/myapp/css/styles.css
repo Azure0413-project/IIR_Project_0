@@ -1,131 +1,155 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-h1 {
+.content {
+    position: relative;
+    z-index: 1; /* Ensure content is above the overlay */
+}
+
+/* to create the overlay. Set its position to absolute, cover the entire parent element, and apply a semi-transparent background color */
+body::before {
+    content: ""; /* This is necessary to create the pseudo-element */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8); /* Adjust the color and transparency as needed */
+    z-index: -1; /* Ensure the overlay is below the content */
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('../img/background_01.jpeg')  no-repeat center center fixed;
+    background-size: cover;
+}
+
+header {
+    background-color: #333333;
+    color: white;
+    padding: 10px 0;
     text-align: center;
-    color: #333;
+}
+
+header h1 {
+    margin: 0;
 }
 
 h2 {
-    color: #555;
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-.data-table th,
-.data-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.data-table th {
-    background-color: #f4f4f4;
-}
-
-.data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.data-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-.table-image {
-    width: 50px;
-    height: auto;
-}
-.search-container {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2em;
+    color: #ffffff;
     margin: 20px 0;
     text-align: center;
 }
 
-.search-form {
+main {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex: 1;  /* percentage, this will push the footer down */
+    padding: 20px;
+    text-align: center;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
 }
 
-.search-input {
+.hero {
+    margin-bottom: 20px;
+}
+
+#prompt-part {
+    display: flex;
+    flex-direction: row; /* default */
+    
+}
+
+input[type="text"] {
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 800px;
+    width: 80%;
+    max-width: 600px;
     margin-right: 10px;
-    transition: border-color 0.3s;
 }
 
-.search-input:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.search-button {
+button {
     padding: 10px 20px;
-    font-size: 16px;
-    color: #053861;
-    background-color: #8fc0f4;
+    background-color: #007bff;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.search-button:hover {
-    background-color: #644df9;
+button:hover {
+    background-color: #0056b3;
 }
 
-.data-table {
+.hidden {
+    display: none;
+}
+
+
+.recipe-card {
+    
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 15vw; 
+    height: 50vh; 
+}
+
+.recipe-card img {
     width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-.data-table th, .data-table td {
-    padding: 12px;
-    text-align: left;
-}
-
-.data-table th {
-    background-color: #f4f4f4;
-}
-
-.data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.table-image {
-    width: 50px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-.header{
-    background-color: rgb(188, 230, 247);
-    padding: 5px;
+    height: 50%;
     border-radius: 10px;
 }
 
-.webtitle{
-    color: #033263;
-    font-size: 60px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.recipe-card h3 {
+    margin: 10px 0;
+    font-size: 1.2em;
 }
 
-.btn-color{
-    background-color: rgb(184, 197, 246);
-    font-weight: bolder;
+.recipe-card p {
+    font-size: 0.9em;
+    color: #666;
 }
-.btn-color:hover{
-    background-color: #5327ef;
-    color:#f1f1f1;
-    font-weight: bolder;
+
+#review{
+    margin:20px;
 }
+
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.feedback-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px; 
+}
+
+.feedback-container textarea {
+    flex: 3; 
+    height: 100%;
+    resize: none;
+}
+
+/* .feedback-container button {
+    flex: 1; 
+    height: 100px;
+    padding: 0 16px; 
+} */
