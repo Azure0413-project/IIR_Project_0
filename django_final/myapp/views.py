@@ -29,7 +29,9 @@ def get_data(request):
             response_image_url_1 = 'https://th.bing.com/th/id/R.26849f2079c6bc8e68fcb55f96398021?rik=gERGWYWIWe2ZWQ&pid=ImgRaw&r=0'
             response_image_url_2 = 'https://th.bing.com/th/id/OIP.jqMbDIhjvi9BNWC-Q9vZSQAAAA?rs=1&pid=ImgDetMain'
             response_image_url_3 = 'https://i.redd.it/9mp2tbfv0foy.jpg'
-            google_map = ["https://127.0.0.1","https://127.0.0.1","https://127.0.0.1"]
+            google_map = ["https://www.foodpanda.com.tw/restaurants/new?lng=120.2264538&lat=22.9983926&vertical=restaurants",
+                          "https://www.foodpanda.com.tw/restaurants/new?lng=120.2264538&lat=22.9983926&vertical=restaurants",
+                          "https://www.foodpanda.com.tw/restaurants/new?lng=120.2264538&lat=22.9983926&vertical=restaurants"]
 
             try:
                 user = CustomUser.objects.get(id=user_id)

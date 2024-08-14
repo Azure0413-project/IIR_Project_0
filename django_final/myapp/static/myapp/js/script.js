@@ -1,7 +1,7 @@
 
 
-const timer1 = 3000;
-const timer2 = 30000;
+const timer1 = 0;
+const timer2 = 0;
 let recordId = null ;
 
 
@@ -145,47 +145,37 @@ function show(data,prompt){
          product_name: data.food_name[0],
          product_price: data.food_price[0],
          product_img: data.image_url_1,
-         tags: ["ramen"]
+         map: data.google_map[0]
      },
      {
          vendor: data.restaurant_name[1],
          product_name: data.food_name[1],
          product_price: data.food_price[1],
          product_img: data.image_url_2,
-         tags: ["ramen"]
+         map: data.google_map[1]
      },
      {
          vendor: data.restaurant_name[2],
          product_name: data.food_name[2],
          product_price: data.food_price[2],
          product_img: data.image_url_3,
-         tags: ["ramen"]
+         map: data.google_map[2]
      },
  ];
- 
-     // Filter recipes based on the prompt
-     const filteredFood = foodInfo.filter(recipe => 
-         recipe.tags.some(tag => prompt.includes(tag))
-     );
- 
-     // If no recipes match, show a default message
-     if (filteredFood.length === 0) {
-         filteredFood.push({
-             title: "No Recommendations",
-             image: "https://via.placeholder.com/150",
-             description: "Sorry, we couldn't find any recommendations for your prompt."
-         });
-     }
 
      // Display recipes
-     filteredFood.forEach(recipe => {
+     foodInfo.forEach(recipe => {
          const listItem = document.createElement('li');
          listItem.className = 'recipe-card';
          listItem.innerHTML = `
              <img src="${recipe.product_img}" alt="${recipe.vendor}">
              <h3>${recipe.product_name}</h3>
-             <p>${recipe.vendor}</p>
+             <p>Restaurant: ${recipe.vendor}</p>
              <p>Price: ${recipe.product_price} NTD</p>
+             <p>
+                <span style="font-size: 0.65rem;">Location:</span><br>
+                <span style="font-size: 0.55rem;">${recipe.map}</span>
+            </p>
          `;
          recommendationList.appendChild(listItem);
      });
@@ -214,4 +204,3 @@ function show(data,prompt){
     }
     typeNextCharacter(); // Start the typing effect
 }
-

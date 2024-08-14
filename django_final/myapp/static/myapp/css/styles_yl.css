@@ -106,12 +106,12 @@ button:hover {
     display: inline-block;
     vertical-align: middle;
     width: 15vw; 
-    height: 35vh; 
+    height: 50vh; 
 }
 
 .recipe-card img {
     width: 100%;
-    height: 70%;
+    height: 50%;
     border-radius: 10px;
 }
 
