@@ -53,22 +53,16 @@ def RDS(str):
 
     # 編碼圖片
     select_num = 3
-    sample_amount = 100
+    sample_amount = 4000
     z_vec = []
     z_vec_label = []
     data_path = '/workspace/data'
     gen_path = '/workspace/test_img'
     # 1942, 2512-2999, 3171, 3202-3999, file noneexist
-    for pic_num in tqdm(range(sample_amount)):
-        img_path = os.path.join(data_path, f'{pic_num}.jpeg')
-        if os.path.isfile(img_path):
-            latent_vector = encode_image(img_path)
-
-            z_vec.append(latent_vector)
-            z_vec_label.append(pic_num)
-            # print(img_path)
-            # print("Latent vector shape:", latent_vector.shape,  type(latent_vector))
-    # print(z_vec_label)
+    
+    z_vec = torch.load("/workspace/z_vec.pth")
+    z_vec_label = np.load('/workspace/z_vec_label.npy')
+    z_vec_label = z_vec_label.tolist()
 
     data_set_amount = len(z_vec)
     # print(data_set_amount)
@@ -121,17 +115,21 @@ def RDS(str):
     json_food_img = []
     json_rest_map = []
 
+    big = torch.tensor([])
+    for eva_num in range(data_set_amount):
+        # picture to vector
+        vector2 = image_to_vector(z_vec[eva_num]) #dataset compare
+        big = torch.cat((big, vector2), 0)
+
     # calculate gen pic[i] with database picture
     for i in range(select_num):
         vector1 = image_to_vector(latent_vector_valid[i]) #gen picture
-        sim_store = []
-        for eva_num in range(data_set_amount):
-            # picture to vector
-            vector2 = image_to_vector(z_vec[eva_num]) #dataset compare
-
-            # evaluate cosine similarity
-            cos_sim = cosine_similarity(vector1, vector2)
-            sim_store.append(float(cos_sim[0][0]))
+        #sim_store = []
+        sim_store = cosine_similarity(big, vector1)
+        #print(sim_store.shape)
+        sim_store = sim_store.squeeze()
+        sim_store = sim_store.tolist()
+        #print(sim_store)
 
         # top[0] : picture label , top[1] : similarity values
         top_k = find_k_largest_with_indices(z_vec_label, sim_store, amount_largest)
@@ -152,9 +150,9 @@ def RDS(str):
 
         # convert python file into JSON file and return value 
         json_str = f_df.to_json(orient='split')
-        print(json_str)
         json_dict = json.loads(json_str)
         json_value = json_dict['data'][0]
+        print(json_value)
 
         json_id.append(json_value[0])
         json_rest_name.append(json_value[1])
@@ -167,12 +165,5 @@ def RDS(str):
         fin_gen_path = os.path.join(gen_path, f'{rand_num[i]}.jpg')
         fin_data_path = os.path.join(data_path, f'{f_df_label}.jpeg')
         show_fig(fin_gen_path, fin_data_path, f'{f_df_label}')
-    """
-    print(json_id)
-    print(json_rest_name)
-    print(json_food_name)
-    print(json_food_price)
-    print(json_food_img)
-    print(json_rest_map)
-    """ 
+
     return prompt, json_rest_name, json_food_name, json_food_price, images[0], images[1], images[2], json_food_img[0], json_food_img[1], json_food_img[2],json_rest_map
