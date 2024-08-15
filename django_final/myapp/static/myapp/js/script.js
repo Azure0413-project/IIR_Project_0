@@ -170,12 +170,13 @@ function show(data, prompt) {
         listItem.className = 'recipe-card';
         listItem.innerHTML = `
 
+       
             <img id="shop-img" src="${recipe.product_img}" alt="${recipe.vendor}">
             <h3>${recipe.product_name}</h3>
-            <p>Restaurant: ${recipe.vendor}</p>
+            <a href=${recipe.map}>${recipe.vendor}</a>
             
             <p>Price: ${recipe.product_price} NTD</p>
-            <a href=${recipe.map}>Shows on map</a>
+            
             <p>
                <span style="font-size: 0.75rem;">Reference:</span><br>
                <img id="lora-img" src="${recipe.lora_img}" >    
