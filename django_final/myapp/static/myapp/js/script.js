@@ -131,9 +131,14 @@ function show(data, prompt) {
     const stringContainer2 = document.getElementById('rag-response');
     setTimeout(() => { stringContainer2.innerText = data.new_prompt; }, timer1 + timer2);
 
+
+ 
+
+
     // make data into foodInfo
     const foodInfo = [
         {
+            lora_img : '/static/0.jpg',
             vendor: data.restaurant_name[0],
             product_name: data.food_name[0],
             product_price: data.food_price[0],
@@ -141,6 +146,7 @@ function show(data, prompt) {
             map: data.google_map[0]
         },
         {
+            lora_img : '/static/1.jpg',
             vendor: data.restaurant_name[1],
             product_name: data.food_name[1],
             product_price: data.food_price[1],
@@ -148,6 +154,7 @@ function show(data, prompt) {
             map: data.google_map[1]
         },
         {
+            lora_img : '/static/2.jpg',
             vendor: data.restaurant_name[2],
             product_name: data.food_name[2],
             product_price: data.food_price[2],
@@ -162,12 +169,18 @@ function show(data, prompt) {
         const listItem = document.createElement('li');
         listItem.className = 'recipe-card';
         listItem.innerHTML = `
-            <img src="${recipe.product_img}" alt="${recipe.vendor}">
+
+            <img id="shop-img" src="${recipe.product_img}" alt="${recipe.vendor}">
             <h3>${recipe.product_name}</h3>
             <p>Restaurant: ${recipe.vendor}</p>
             
             <p>Price: ${recipe.product_price} NTD</p>
             <a href=${recipe.map}>Shows on map</a>
+            <p>
+               <span style="font-size: 0.75rem;">Reference:</span><br>
+               <img id="lora-img" src="${recipe.lora_img}" >    
+            </p>
+            
           
         `;
         recommendationList.appendChild(listItem);
