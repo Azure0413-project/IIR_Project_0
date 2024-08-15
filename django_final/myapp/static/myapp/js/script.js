@@ -1,4 +1,4 @@
-const timer1 = 6000;
+const timer1 = 0;
 const timer2 = 0;
 let recordId = null;
 let feedback_btn = 1;
@@ -121,11 +121,11 @@ async function updateRecord(recordId, responseAgree, feedback) {
 
 // show results
 function show(data, prompt) {
-    // nonsense response
-    const stringContainer = document.getElementById('nonsense-response');
-    const text = "Thanks for your patience! I’m just putting together the information you need. This may take a few moments, I appreciate your understanding and will have the information for you shortly.";
-    setTimeout(() => { typeEffect(stringContainer, text); }, timer1 + 1000);
-    setTimeout(() => { document.getElementById('nonsense-response').classList.add('hidden'); }, timer1 + timer2);
+    // // nonsense response
+    // const stringContainer = document.getElementById('nonsense-response');
+    // const text = "Thanks for your patience! I’m just putting together the information you need. This may take a few moments, I appreciate your understanding and will have the information for you shortly.";
+    // setTimeout(() => { typeEffect(stringContainer, text); }, timer1 + 1000);
+    // setTimeout(() => { document.getElementById('nonsense-response').classList.add('hidden'); }, timer1 + timer2);
 
     // rag response
     const stringContainer2 = document.getElementById('rag-response');
@@ -165,11 +165,10 @@ function show(data, prompt) {
             <img src="${recipe.product_img}" alt="${recipe.vendor}">
             <h3>${recipe.product_name}</h3>
             <p>Restaurant: ${recipe.vendor}</p>
+            
             <p>Price: ${recipe.product_price} NTD</p>
-            <p>
-               <span style="font-size: 0.65rem;">Location:</span><br>
-               <span style="font-size: 0.55rem;">${recipe.map}</span>
-           </p>
+            <a href=${recipe.map}>Shows on map</a>
+          
         `;
         recommendationList.appendChild(listItem);
     });
