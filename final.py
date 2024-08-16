@@ -57,8 +57,8 @@ def RDS(str):
     sample_amount = 4000
     z_vec = []
     z_vec_label = []
-    data_path = '/app/sum_project/data/data/'
-    gen_path = '/app/sum_project/food_gen_dataset/meat'
+    data_path = '/workspace/data/'
+    gen_path = '/workspace/test_img'
     # 1942, 2512-2999, 3171, 3202-3999, file noneexist
     
     z_vec = torch.load(f"/workspace/z_vec_{model_name}.pth")
