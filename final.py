@@ -171,12 +171,12 @@ def RDS(str):
         top_k_value.append(top_k[1])
 
         for i in range(amount_largest):
-        print(top_k_label[i])
-        print(top_k_value[i])
-        plt.scatter(top_k_label[i], top_k_value[i])
-        plt.xlabel("pic label")
-        plt.ylabel("similarity")
-        plt.title("top 3 similarity for each gen")
-        plt.savefig(f'{model_name}_sim_{i}.jpg', format='jpg')
-        plt.show()
+            print(top_k_label[i])
+            print(top_k_value[i])
+            plt.scatter(top_k_label[i], top_k_value[i])
+            plt.xlabel("pic label")
+            plt.ylabel("similarity")
+            plt.title("top 3 similarity for each gen")
+            plt.savefig(f'{model_name}_sim_{i}.jpg', format='jpg')
+            plt.show()
     return prompt, json_rest_name, json_food_name, json_food_price, images[0], images[1], images[2], json_food_img[0], json_food_img[1], json_food_img[2],json_rest_map
