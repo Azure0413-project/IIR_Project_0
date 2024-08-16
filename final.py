@@ -22,9 +22,10 @@ def RDS(str):
     prompt = RAG(str, '/workspace/faiss_index', '/workspace/document')
     images = call_diffusion(prompt)
     # 加載預訓練的ResNet18模型，不包括頂層的全連接層
-    base_model = models.resnet18(pretrained=True)
-    base_model = nn.Sequential(*list(base_model.children())[:-1])  # 移除頂層的全連接層
+    base_model = models.vgg19(pretrained=True)
+    # base_model = nn.Sequential(*list(base_model.children())[:-1])  # 移除頂層的全連接層
     base_model.eval()  # 設置模型為評估模式
+    model_name = 'vgg19'
 
     # 定義圖片的預處理變換
     preprocess = transforms.Compose([
@@ -56,16 +57,15 @@ def RDS(str):
     sample_amount = 4000
     z_vec = []
     z_vec_label = []
-    data_path = '/workspace/data'
-    gen_path = '/workspace/test_img'
+    data_path = '/app/sum_project/data/data/'
+    gen_path = '/app/sum_project/food_gen_dataset/meat'
     # 1942, 2512-2999, 3171, 3202-3999, file noneexist
     
-    z_vec = torch.load("/workspace/z_vec.pth")
-    z_vec_label = np.load('/workspace/z_vec_label.npy')
+    z_vec = torch.load(f"/workspace/z_vec_{model_name}.pth")
+    z_vec_label = np.load(f'/workspace/z_vec_label_{model_name}.npy')
     z_vec_label = z_vec_label.tolist()
 
     data_set_amount = len(z_vec)
-    # print(data_set_amount)
 
     # gen_pic to be compare, rand a label
     img_path_valid = []
@@ -91,7 +91,6 @@ def RDS(str):
         return labels, values
 
     df = pd.read_csv("/workspace/data/restaurant.csv")
-    df
 
     def show_fig(gen_path, data_path, f_df_label) :
         pic_gen = Image.open(gen_path)
@@ -114,6 +113,8 @@ def RDS(str):
     json_food_price = []
     json_food_img = []
     json_rest_map = []
+    top_k_label = []
+    top_k_value = []
 
     big = torch.tensor([])
     for eva_num in range(data_set_amount):
@@ -166,4 +167,16 @@ def RDS(str):
         fin_data_path = os.path.join(data_path, f'{f_df_label}.jpeg')
         show_fig(fin_gen_path, fin_data_path, f'{f_df_label}')
 
+        top_k_label.append(top_k[0])
+        top_k_value.append(top_k[1])
+
+        for i in range(amount_largest):
+        print(top_k_label[i])
+        print(top_k_value[i])
+        plt.scatter(top_k_label[i], top_k_value[i])
+        plt.xlabel("pic label")
+        plt.ylabel("similarity")
+        plt.title("top 3 similarity for each gen")
+        plt.savefig(f'{model_name}_sim_{i}.jpg', format='jpg')
+        plt.show()
     return prompt, json_rest_name, json_food_name, json_food_price, images[0], images[1], images[2], json_food_img[0], json_food_img[1], json_food_img[2],json_rest_map
